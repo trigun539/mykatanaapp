@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require('uuid')
 const knex = require('../db/knex')
 const User = require('../models/User')
 
@@ -27,15 +28,37 @@ module.exports = function (app) {
       })
   })
 
-  app.get('/users/:id/reminders', (req, res) => {})
-
   // CREATE
-  app.post('/users', (req, res) => {})
+  app.post('/users', (req, res) => {
+    knex('users')
+      .insert({
+        id: uuidv4(),
+        ...req.body
+      })
+      .then(result => {
+        res.send(result)
+      })
+  })
 
   // UPDATE
-  app.put('/users/:id', (req, res) => {})
+  app.patch('/users/:id', (req, res) => {
+    const id = req.params.id
 
-  app.put('/users/:id/reminders/sync', (req, res) => {})
+    knex
+      .select()
+      .from('users')
+      .where('id', id)
+      .then(user => {
+        knex('users')
+          .where('id', id)
+          .update(req.body)
+          .then(result => {
+            res.send(result)
+          })
+      })
+  })
+
+  app.put('/users/:id', (req, res) => {})
 
   // DELETE
   app.delete('/users/:id', (req, res) => {})

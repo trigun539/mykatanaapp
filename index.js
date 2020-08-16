@@ -6,6 +6,8 @@ const morgan = require('morgan')
 const cors = require('cors')
 const rateLimit = require('express-rate-limit')
 const slowDown = require('express-slow-down')
+const UserAPI = require('./api/user-api')
+const SwordAPI = require('./api/sword-api')
 const app = express()
 
 const limiter = rateLimit({
@@ -23,10 +25,7 @@ const speedLimiter = slowDown({
  * Config
  */
 
-require('dotenv').config()
-
 app.set('trust proxy')
-
 app.use(limiter)
 app.use(speedLimiter)
 app.use(helmet())
@@ -41,6 +40,9 @@ app.use(methodOverride('X-HTTP-Method-Override'))
  */
 
 app.get('/', (req, res) => res.send('Katana API'))
+
+UserAPI(app)
+SwordAPI(app)
 
 // 404 not found
 app.use((req, res, next) => {

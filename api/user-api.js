@@ -1,65 +1,65 @@
 const { v4: uuidv4 } = require('uuid')
+const { Router } = require('express')
 const knex = require('../db/knex')
 const User = require('../models/User')
 
-module.exports = function (app) {
-  // GET
-  app.get('/user', (req, res) => {})
+const router = Router()
 
-  // GET
-  app.get('/users', (req, res) => {
-    knex
-      .select()
-      .from('users')
-      .then(users => {
-        res.send(users)
-      })
-  })
+// GET
+router.get('/', (req, res) => {
+  knex
+    .select()
+    .from('users')
+    .then(users => {
+      res.send(users)
+    })
+})
 
-  app.get('/users/:id', (req, res) => {
-    const id = req.params.id
+router.get('/:id', (req, res) => {
+  const id = req.params.id
 
-    knex
-      .select()
-      .from('users')
-      .where('id', id)
-      .then(user => {
-        res.send(user[0])
-      })
-  })
+  knex
+    .select()
+    .from('users')
+    .where('id', id)
+    .then(user => {
+      res.send(user[0])
+    })
+})
 
-  // CREATE
-  app.post('/users', (req, res) => {
-    knex('users')
-      .insert({
-        id: uuidv4(),
-        ...req.body
-      })
-      .then(result => {
-        res.send(result)
-      })
-  })
+// CREATE
+router.post('/', (req, res) => {
+  knex('users')
+    .insert({
+      id: uuidv4(),
+      ...req.body
+    })
+    .then(result => {
+      res.send(result)
+    })
+})
 
-  // UPDATE
-  app.patch('/users/:id', (req, res) => {
-    const id = req.params.id
+// UPDATE
+router.patch('/:id', (req, res) => {
+  const id = req.params.id
 
-    knex
-      .select()
-      .from('users')
-      .where('id', id)
-      .then(user => {
-        knex('users')
-          .where('id', id)
-          .update(req.body)
-          .then(result => {
-            res.send(result)
-          })
-      })
-  })
+  knex
+    .select()
+    .from('users')
+    .where('id', id)
+    .then(user => {
+      knex('users')
+        .where('id', id)
+        .update(req.body)
+        .then(result => {
+          res.send(result)
+        })
+    })
+})
 
-  app.put('/users/:id', (req, res) => {})
+router.put('/:id', (req, res) => {})
 
-  // DELETE
-  app.delete('/users/:id', (req, res) => {})
-}
+// DELETE
+router.delete('/:id', (req, res) => {})
+
+module.exports = router

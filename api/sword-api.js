@@ -1,36 +1,42 @@
+const { v4: uuidv4 } = require('uuid')
+const { Router } = require('express')
 const knex = require('../db/knex')
 
-module.exports = function (app) {
-  // GET
-  app.get('/user', (req, res) => {})
+const router = Router()
 
-  // GET
-  app.get('/swords', (req, res) => {
-    knex
-      .select()
-      .from('swords')
-      .then(swords => {
-        res.send(swords)
-      })
-  })
+// GET
+router.get('/', (req, res) => {
+  knex
+    .select()
+    .from('swords')
+    .then(swords => {
+      res.send(swords)
+    })
+})
 
-  app.get('/swords/:id', (req, res) => {
-    knex
-      .select({ id })
-      .from('swords')
-      .then(sword => res.send(sword))
-  })
+router.get('/:id', (req, res) => {
+  knex
+    .select({ id })
+    .from('swords')
+    .then(sword => res.send(sword))
+})
 
-  app.get('/swords/:id/reminders', (req, res) => {})
+// CREATE
+router.post('/', (req, res) => {
+  knex('swords')
+    .insert({
+      id: uuidv4(),
+      ...req.body
+    })
+    .then(result => {
+      res.send(result)
+    })
+})
 
-  // CREATE
-  app.post('/swords', (req, res) => {})
+// UPDATE
+router.put('/:id', (req, res) => {})
 
-  // UPDATE
-  app.put('/swords/:id', (req, res) => {})
+// DELETE
+router.delete('/:id', (req, res) => {})
 
-  app.put('/swords/:id/reminders/sync', (req, res) => {})
-
-  // DELETE
-  app.delete('/swords/:id', (req, res) => {})
-}
+module.exports = router

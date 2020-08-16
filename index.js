@@ -6,8 +6,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 const rateLimit = require('express-rate-limit')
 const slowDown = require('express-slow-down')
-const UserAPI = require('./api/user-api')
-const SwordAPI = require('./api/sword-api')
+const API = require('./api/')
 const app = express()
 
 const limiter = rateLimit({
@@ -41,8 +40,7 @@ app.use(methodOverride('X-HTTP-Method-Override'))
 
 app.get('/', (req, res) => res.send('Katana API'))
 
-UserAPI(app)
-SwordAPI(app)
+app.use('/api', API)
 
 // 404 not found
 app.use((req, res, next) => {
